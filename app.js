@@ -23,6 +23,7 @@ const products = [
   {
     id: 1,
     name: "Gaming Laptop",
+    category: "laptops",
     price: 1299,
     image:
       "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?q=80&w=800&auto=format&fit=crop",
@@ -31,6 +32,7 @@ const products = [
   {
     id: 2,
     name: "MacBook Pro",
+    category: "laptops",
     price: 1999,
     image:
       "https://images.unsplash.com/photo-1517336714739-489689fd1ca8?q=80&w=800&auto=format&fit=crop",
@@ -39,6 +41,7 @@ const products = [
   {
     id: 3,
     name: "Wireless Headphones",
+    category: "audio",
     price: 199,
     image:
       "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=800&auto=format&fit=crop",
@@ -47,6 +50,7 @@ const products = [
   {
     id: 4,
     name: "Smart Watch",
+    category: "smart-watch",
     price: 249,
     image:
       "https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=800&auto=format&fit=crop",
@@ -254,27 +258,25 @@ document
 // ADD TO CART
 // ==========================
 
-const addButtons =
-  document.querySelectorAll(
-    ".product-info button"
-  );
+const addButtons = document.querySelectorAll(
+  ".product-info button"
+);
 
-addButtons.forEach((button, index) => {
-
+addButtons.forEach((button) => {
   button.addEventListener("click", () => {
-
     if (!currentUser) {
-
-      showNotification(
-        "Please login first"
-      );
-
+      showNotification("Please login first");
       loginModal.classList.add("active");
-
       return;
     }
 
-    addToCart(products[index]);
+    const card = button.closest(".product-card");
+    const category = card?.dataset?.category;
+
+    // Find matching product by category. If multiple products share a category (like laptops),
+    // fall back to the first match.
+    const match = products.find((p) => p.category === category);
+    addToCart(match || products[0]);
   });
 });
 
@@ -431,7 +433,7 @@ function renderCart() {
   const totalElement =
     document.querySelector(".cart-total");
 
-  if (!cartItems) return;
+  if (!cartItems || !totalElement) return;
 
   cartItems.innerHTML = "";
 
@@ -532,6 +534,12 @@ document.addEventListener("click", (e) => {
       "checkout-btn"
     )
   ) {
+
+    if (!currentUser) {
+      showNotification("Please login to checkout");
+      loginModal.classList.add("active");
+      return;
+    }
 
     if (cart.length === 0) {
 
@@ -701,53 +709,271 @@ setInterval(() => {
 }, 5000);
 
 // ==========================
-// INITIALIZE
+// SECTION NAV (SIDEBAR MENU) + CATEGORY FILTERING
 // ==========================
 
-updateCartCount();
+function scrollToSection(sectionId) {
+  const target = document.querySelector(sectionId);
+  if (!target) return;
 
-renderCart();
+  target.scrollIntoView({
+    behavior: "smooth",
+    block: "start",
+  });
+}
 
-console.log(
-  "SLYTECH FULL SYSTEM READY"
-);
+function setActiveMenu(menuItem) {
+  document
+    .querySelectorAll(".menu-item")
+    .forEach((mi) => mi.classList.remove("active"));
+
+  menuItem.classList.add("active");
+}
+
+function showCategorySection(targetSelector) {
+  // Hide all category sections, show the selected one
+  document.querySelectorAll(".products[id]").forEach((sec) => {
+    sec.style.display = "none";
+  });
+
+  const selected = document.querySelector(targetSelector);
+  if (selected) selected.style.display = "block";
+}
+
+document.querySelectorAll(".menu-item").forEach((item) => {
+  item.addEventListener("click", () => {
+    const target = item.dataset.target;
+    if (!target) return;
+
+    // Redirect to section using hash (so it works like a page navigation)
+    // Example: #laptops
+    window.location.hash = target;
+
+    setActiveMenu(item);
+    scrollToSection(target);
+    showCategorySection(target);
+  });
+});
+
+// Handle direct loads like: index.html#laptops
+window.addEventListener("hashchange", () => {
+  const hash = window.location.hash;
+  if (!hash) return;
+
+  // hash is like "#laptops"
+  const section = document.querySelector(hash);
+  if (!section) return;
+
+  // set active menu item
+  document.querySelectorAll(".menu-item").forEach((mi) => {
+    mi.classList.toggle("active", mi.dataset.target === hash);
+  });
+
+  // show the right section
+  showCategorySection(hash);
+
+  // ensure scroll to the visible part
+  scrollToSection(hash);
+});
+
 // ==========================
-// FORGOT PASSWORD FEATURE
+// FORGOT PASSWORD MODAL
 // ==========================
 
-// Elements
-const forgotPasswordLink = document.getElementById("forgotPassword");
 const forgotModal = document.getElementById("forgotModal");
-const closeForgotModal = document.querySelector(".close-forgot");
 const forgotForm = document.getElementById("forgotForm");
 const forgotMessage = document.getElementById("forgotMessage");
+const closeForgotModal = document.querySelector("#forgotModal .close-forgot");
+const forgotPasswordLink = document.getElementById("forgotPassword");
 
-// Show Forgot Modal on click
-forgotPasswordLink.addEventListener("click", (e) => {
-  e.preventDefault();
-  forgotModal.classList.add("active");
-});
+if (forgotModal && forgotForm && forgotMessage && closeForgotModal && forgotPasswordLink) {
+  // Open forgot modal from login modal
+  forgotPasswordLink.addEventListener("click", (e) => {
+    e.preventDefault();
+    loginModal.classList.remove("active");
+    forgotMessage.innerText = "";
+    forgotModal.classList.add("active");
+  });
 
-// Close Forgot Modal
-closeForgotModal.addEventListener("click", () => {
-  forgotModal.classList.remove("active");
-});
+  // Close Forgot Modal
+  closeForgotModal.addEventListener("click", () => {
+    forgotModal.classList.remove("active");
+  });
 
-// Handle Forgot Password form submission
-forgotForm.addEventListener("submit", (e) => {
-  e.preventDefault();
-  const email = document.getElementById("forgotEmail").value;
-  
-  // Check if user exists
-  const user = users.find((u) => u.email === email);
-  
-  if (user) {
-    // In a real app, you’d send a backend request here.
-    // For demo, we simulate sending a reset.
-    forgotMessage.innerText = "A reset link has been sent to your email.";
-    forgotMessage.style.color = "#28a745"; // Green success color
-  } else {
-    forgotMessage.innerText = "No account found with that email.";
-    forgotMessage.style.color = "#dc3545"; // Red error color
+  // Handle Forgot Password form submission
+  forgotForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const email = document.getElementById("forgotEmail").value;
+
+    // Check if user exists
+    const user = users.find((u) => u.email === email);
+
+    if (user) {
+      // For demo, we simulate sending a reset.
+      forgotMessage.innerText =
+        "A reset link has been sent to your email.";
+      forgotMessage.style.color = "#28a745"; // Green success color
+    } else {
+      forgotMessage.innerText =
+        "No account found with that email.";
+      forgotMessage.style.color = "#dc3545"; // Red error color
+    }
+  });
+}
+
+// ==========================
+// ADMIN DASHBOARD
+// ==========================
+
+const ADMIN_EMAIL = "Qwekuapex@gmail.com";
+const ADMIN_PASSWORD = "Qweku@059";
+
+let adminSession =
+  JSON.parse(localStorage.getItem("slytechAdminSession")) || null;
+
+function ensureAdminUI() {
+  // Create admin modal + dashboard shell once
+  let adminModal = document.getElementById("adminModal");
+  if (!adminModal) {
+    adminModal = document.createElement("div");
+    adminModal.id = "adminModal";
+    adminModal.className = "auth-modal";
+    adminModal.innerHTML = `
+      <div class="auth-box" style="width:520px;">
+        <span class="close-admin" style="position:absolute; right:20px; top:15px; font-size:25px; cursor:pointer;">&times;</span>
+        <h2>Admin Dashboard</h2>
+
+        <form id="adminLoginForm">
+          <input type="email" id="adminEmail" placeholder="Admin Email" required />
+          <input type="password" id="adminPassword" placeholder="Admin Password" required />
+          <button type="submit">Login as Admin</button>
+        </form>
+
+        <div id="adminPanel" style="display:none; margin-top:20px;">
+          <div style="display:flex; gap:10px; margin-bottom:15px;">
+            <button id="adminRefreshOrders" style="flex:1; padding:12px; border:none; background:#0f172a; color:#fff; border-radius:10px; cursor:pointer; font-weight:600;">Refresh Orders</button>
+            <button id="adminLogout" style="width:120px; padding:12px; border:none; background:#dc3545; color:#fff; border-radius:10px; cursor:pointer; font-weight:600;">Logout</button>
+          </div>
+
+          <h3 style="margin-bottom:10px; color:#0f172a;">Orders</h3>
+          <div id="adminOrders" style="max-height:320px; overflow:auto; background:#f1f5f9; padding:15px; border-radius:15px;"></div>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(adminModal);
   }
-});
+
+  // Create an Admin entry point (hidden button) if missing
+  if (!document.getElementById("openAdminBtn")) {
+    const btn = document.createElement("button");
+    btn.id = "openAdminBtn";
+    btn.textContent = "Admin";
+    btn.style.display = "none"; // keep it discreet; you can change to flex if you want visible.
+    btn.addEventListener("click", () => adminModal.classList.add("active"));
+    document.body.appendChild(btn);
+
+    // Optionally allow opening admin with shift+a
+    document.addEventListener("keydown", (ev) => {
+      if (ev.shiftKey && (ev.key === "A" || ev.key === "a")) {
+        adminModal.classList.add("active");
+      }
+    });
+  }
+
+  const closeBtn = adminModal.querySelector(".close-admin");
+  const loginForm = adminModal.querySelector("#adminLoginForm");
+  const emailInput = adminModal.querySelector("#adminEmail");
+  const passwordInput = adminModal.querySelector("#adminPassword");
+  const adminPanel = adminModal.querySelector("#adminPanel");
+  const ordersBox = adminModal.querySelector("#adminOrders");
+  const refreshBtn = adminModal.querySelector("#adminRefreshOrders");
+  const logoutBtn = adminModal.querySelector("#adminLogout");
+
+  function loadOrders() {
+    const orders =
+      JSON.parse(localStorage.getItem("slytechOrders")) || [];
+
+    if (!ordersBox) return;
+
+    if (orders.length === 0) {
+      ordersBox.innerHTML = `<div style="color:#64748b;">No orders yet.</div>`;
+      return;
+    }
+
+    ordersBox.innerHTML = orders
+      .slice()
+      .reverse()
+      .map((o) => {
+        const items = (o.products || [])
+          .map((p) => `${p.name} x${p.quantity}`)
+          .join(", ");
+        return `
+          <div style="background:#fff; padding:12px; border-radius:12px; margin-bottom:12px; border:1px solid #e2e8f0;">
+            <div style="font-weight:700; color:#0f172a;">$${Number(o.total).toFixed(2)} - ${new Date(o.date).toLocaleString()}</div>
+            <div style="color:#475569; margin-top:6px;">User: ${o.user || "unknown"}</div>
+            <div style="color:#475569; margin-top:6px;">Items: ${items || "-"}</div>
+          </div>
+        `;
+      })
+      .join("");
+  }
+
+  function setAdminLoggedIn(isLoggedIn) {
+    if (!adminPanel) return;
+
+    if (isLoggedIn) {
+      loginForm.style.display = "none";
+      adminPanel.style.display = "block";
+      loadOrders();
+    } else {
+      loginForm.style.display = "flex";
+      adminPanel.style.display = "none";
+    }
+  }
+
+  if (adminSession && adminSession.loggedIn) {
+    setAdminLoggedIn(true);
+  } else {
+    setAdminLoggedIn(false);
+  }
+
+  closeBtn?.addEventListener("click", () => {
+    adminModal.classList.remove("active");
+  });
+
+  loginForm?.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const email = emailInput.value;
+    const password = passwordInput.value;
+
+    if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+      adminSession = { loggedIn: true, email };
+      localStorage.setItem(
+        "slytechAdminSession",
+        JSON.stringify(adminSession)
+      );
+      showNotification("Admin login successful");
+      setAdminLoggedIn(true);
+      return;
+    }
+
+    showNotification("Invalid admin credentials");
+  });
+
+  refreshBtn?.addEventListener("click", () => {
+    loadOrders();
+  });
+
+  logoutBtn?.addEventListener("click", () => {
+    adminSession = null;
+    localStorage.removeItem("slytechAdminSession");
+    showNotification("Admin logged out");
+    setAdminLoggedIn(false);
+  });
+}
+
+ensureAdminUI();
+
+// Open admin modal if already logged in and admin wants it (keyboard shortcut is set)
+

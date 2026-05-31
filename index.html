@@ -43,51 +43,52 @@
     <!-- SIDEBAR -->
     <div class="sidebar">
 
-      <div class="menu-item active">
+      <div class="menu-item active" data-target="#all">
         <i class="fa-solid fa-border-all"></i>
         <span>All</span>
       </div>
 
-      <div class="menu-item">
+      <div class="menu-item" data-target="#smartphones">
         <i class="fa-solid fa-mobile-screen"></i>
         <span>Smartphones</span>
         <small>Hot</small>
       </div>
 
-      <div class="menu-item">
+      <div class="menu-item" data-target="#laptops">
         <i class="fa-solid fa-laptop"></i>
         <span>Laptops</span>
       </div>
 
-      <div class="menu-item">
+      <div class="menu-item" data-target="#audio">
         <i class="fa-solid fa-headphones"></i>
         <span>Audio</span>
       </div>
 
-      <div class="menu-item">
+      <div class="menu-item" data-target="#gaming">
         <i class="fa-solid fa-gamepad"></i>
         <span>Gaming</span>
       </div>
 
-      <div class="menu-item">
+      <div class="menu-item" data-target="#cameras">
         <i class="fa-solid fa-camera"></i>
         <span>Cameras</span>
       </div>
 
-      <div class="menu-item">
+      <div class="menu-item" data-target="#smart-watch">
         <i class="fa-solid fa-clock"></i>
         <span>Smart Watch</span>
       </div>
 
-      <div class="menu-item">
+      <div class="menu-item" data-target="#monitors">
         <i class="fa-solid fa-tv"></i>
         <span>Monitors</span>
       </div>
 
-      <div class="menu-item">
+      <div class="menu-item" data-target="#best-deals">
         <i class="fa-solid fa-tag"></i>
         <span>Best Deals</span>
       </div>
+
 
     </div>
 
@@ -171,16 +172,17 @@
   </section>
 
   <!-- PRODUCTS -->
-  <section class="products">
+  <section class="products" id="all">
 
     <div class="section-title">
-      <h2>Trending Products</h2>
+      <h2>All Products</h2>
     </div>
 
     <div class="product-grid">
 
+
       <!-- PRODUCT -->
-      <div class="product-card">
+      <div class="product-card" data-category="laptops">
 
         <div class="product-image">
           <img src="https://images.unsplash.com/photo-1541807084-5c52b6b3adef?q=80&w=800&auto=format&fit=crop" alt="">
@@ -195,8 +197,9 @@
 
       </div>
 
+
       <!-- PRODUCT -->
-      <div class="product-card">
+      <div class="product-card" data-category="laptops">
 
         <div class="product-image">
           <img src="https://images.unsplash.com/photo-1517336714739-489689fd1ca8?q=80&w=800&auto=format&fit=crop" alt="">
@@ -211,8 +214,9 @@
 
       </div>
 
+
       <!-- PRODUCT -->
-      <div class="product-card">
+      <div class="product-card" data-category="audio">
 
         <div class="product-image">
           <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=800&auto=format&fit=crop" alt="">
@@ -227,8 +231,9 @@
 
       </div>
 
+
       <!-- PRODUCT -->
-      <div class="product-card">
+      <div class="product-card" data-category="smart-watch">
 
         <div class="product-image">
           <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=800&auto=format&fit=crop" alt="">
@@ -246,6 +251,159 @@
     </div>
 
   </section>
+
+  <!-- SMARTPHONES -->
+  <section class="products" id="smartphones" style="display:none;">
+    <div class="section-title">
+      <h2>Smartphones</h2>
+    </div>
+    <div class="product-grid">
+      <div class="product-card" data-category="smartphones">
+        <div class="product-image">
+          <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?q=80&w=800&auto=format&fit=crop" alt="">
+        </div>
+        <div class="product-info">
+          <h3>New Smartphone</h3>
+          <p>$799</p>
+          <button>Add to Cart</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LAPTOPS -->
+  <section class="products" id="laptops" style="display:none;">
+    <div class="section-title">
+      <h2>Laptops</h2>
+    </div>
+    <div class="product-grid">
+      <div class="product-card" data-category="laptops">
+        <div class="product-image">
+          <img src="https://images.unsplash.com/photo-1541807084-5c52b6b3adef?q=80&w=800&auto=format&fit=crop" alt="">
+        </div>
+        <div class="product-info">
+          <h3>Gaming Laptop</h3>
+          <p>$1,299</p>
+          <button>Add to Cart</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AUDIO -->
+  <section class="products" id="audio" style="display:none;">
+    <div class="section-title">
+      <h2>Audio</h2>
+    </div>
+    <div class="product-grid">
+      <div class="product-card" data-category="audio">
+        <div class="product-image">
+          <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=800&auto=format&fit=crop" alt="">
+        </div>
+        <div class="product-info">
+          <h3>Wireless Headphones</h3>
+          <p>$199</p>
+          <button>Add to Cart</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GAMING -->
+  <section class="products" id="gaming" style="display:none;">
+    <div class="section-title">
+      <h2>Gaming</h2>
+    </div>
+    <div class="product-grid">
+      <div class="product-card" data-category="gaming">
+        <div class="product-image">
+          <img src="https://images.unsplash.com/photo-1520523839897-7a0f4b1f3bb8?q=80&w=800&auto=format&fit=crop" alt="">
+        </div>
+        <div class="product-info">
+          <h3>Gaming Console</h3>
+          <p>$499</p>
+          <button>Add to Cart</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CAMERAS -->
+  <section class="products" id="cameras" style="display:none;">
+    <div class="section-title">
+      <h2>Cameras</h2>
+    </div>
+    <div class="product-grid">
+      <div class="product-card" data-category="cameras">
+        <div class="product-image">
+          <img src="https://images.unsplash.com/photo-1519183071298-a2962be96f68?q=80&w=800&auto=format&fit=crop" alt="">
+        </div>
+        <div class="product-info">
+          <h3>Mirrorless Camera</h3>
+          <p>$899</p>
+          <button>Add to Cart</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SMART WATCH -->
+  <section class="products" id="smart-watch" style="display:none;">
+    <div class="section-title">
+      <h2>Smart Watch</h2>
+    </div>
+    <div class="product-grid">
+      <div class="product-card" data-category="smart-watch">
+        <div class="product-image">
+          <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=800&auto=format&fit=crop" alt="">
+        </div>
+        <div class="product-info">
+          <h3>Smart Watch</h3>
+          <p>$249</p>
+          <button>Add to Cart</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MONITORS -->
+  <section class="products" id="monitors" style="display:none;">
+    <div class="section-title">
+      <h2>Monitors</h2>
+    </div>
+    <div class="product-grid">
+      <div class="product-card" data-category="monitors">
+        <div class="product-image">
+          <img src="https://images.unsplash.com/photo-1545239351-1141bd82e8a6?q=80&w=800&auto=format&fit=crop" alt="">
+        </div>
+        <div class="product-info">
+          <h3>4K Monitor</h3>
+          <p>$349</p>
+          <button>Add to Cart</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BEST DEALS -->
+  <section class="products" id="best-deals" style="display:none;">
+    <div class="section-title">
+      <h2>Best Deals</h2>
+    </div>
+    <div class="product-grid">
+      <div class="product-card" data-category="best-deals">
+        <div class="product-image">
+          <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=800&auto=format&fit=crop" alt="">
+        </div>
+        <div class="product-info">
+          <h3>Deal Bundle</h3>
+          <p>$299</p>
+          <button>Add to Cart</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
 
   <!-- LOGIN MODAL -->
 <div class="auth-modal" id="loginModal">
